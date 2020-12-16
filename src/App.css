@@ -32,8 +32,13 @@ main {
   font-family: 'Delius';
 }
 
-.Navbar {
+.Nav {
   height: 30px;
+  width: 100%;
+}
+
+.Navbar {
+  height: 100%;
   width: 100%;
   background-color: #d1d1d1;
   display: flex;

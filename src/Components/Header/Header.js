@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
+import Nav from '../Nav/Nav'
 
 export default class Header extends Component {
     constructor() {
@@ -14,11 +15,9 @@ export default class Header extends Component {
                 <div className="Header-title">
                     <h1>Trails App</h1>
                 </div>
-                <nav className="Navbar">
-                    <Link className="linktag" to='/'>Return to Activities</Link>
-                    <Link className="linktag" to='/signup'>Signup</Link>
-                    <Link className="linktag" to='/login'>Login</Link>
-                </nav>
+                <Nav
+                loggedIn={this.props.loggedIn}
+                />
             </div>
         )
     }

@@ -9,6 +9,7 @@ import Location from './Components/Location/Location'
 import Header from './Components/Header/Header'
 import Login from './Components/Login/Login'
 import Signup from './Components/Signup/Signup'
+import Logout from './Components/Logout/Logout'
 
 const backendUrl = 'https://trails-app-api.herokuapp.com/api'
 
@@ -28,30 +29,39 @@ export default class App extends Component {
   login = async (event) => {
     event.preventDefault()
 
-    console.log(event.target.username.value)
-
     let response = await axios.post(`${backendUrl}/auth/login`, {
       username: event.target.username.value,
       password: event.target.password.value
     })
 
-    console.log(response.config.data)
+    this.setState({
+      loggedIn: true,
+      userId: response.data.id,
+      admin: response.data.admin,
+    })
   }
 
   signup = async (event) => {
     event.preventDefault()
 
-    await axios.post(`${backendUrl}/auth/login`, {
+    await axios.post(`${backendUrl}/auth/signup`, {
       name: event.target.name.value,
       username: event.target.username.value,
       password: event.target.password.value
     })
 
+    this.login(event)
 
   }
 
   logout = async () => {
     await axios.get(`${backendUrl}/auth/logout`)
+
+    this.setState({
+      loggedIn: false,
+      userId: 0,
+      admin: false,
+    })
   }
 
   getActivities = async () => {
@@ -79,38 +89,50 @@ export default class App extends Component {
 
     return (
       <div className="App">
-        <Header />
+        <Header
+        loggedIn={this.state.loggedIn}
+        userId={this.state.userId}
+        />
         <main>
           <Switch>
             <Route exact path='/'
-            component={() => <ActivityList
-            activities={this.state.activities}
-            />}
+              component={() => <ActivityList
+              activities={this.state.activities}
+              admin={this.state.admin}
+              />}
             />
             <Route path='/signup'
-            component={() =>
-            <Signup
-            signup={this.signup}
-            />}
+              component={(routerProps) =>
+              <Signup
+              {...routerProps}
+              signup={this.signup}
+              />}
             />
             <Route path='/login'
-            component={(routerProps) =>
-            <Login
-            {...routerProps}
-            login={this.login}
-            />}
+              component={(routerProps) =>
+              <Login
+              {...routerProps}
+              login={this.login}
+              />}
+            />
+              <Route path='/logout'
+              component={(routerProps) =>
+              <Logout
+              {...routerProps}
+              logout={this.logout}
+              />}
             />
             <Route path='/activities/:id'
-            component={(routerProps) => <Activity 
-            {...routerProps}
-            activities={this.state.activities}
-            />}
+              component={(routerProps) => <Activity 
+              {...routerProps}
+              activities={this.state.activities}
+              />}
             />
             <Route path='/locations/:id'
-            component={(routerProps) => <Location 
-            {...routerProps}
-            locations={this.state.locations}
-            />}
+              component={(routerProps) => <Location 
+              {...routerProps}
+              locations={this.state.locations}
+              />}
             />
           </Switch>
         </main>

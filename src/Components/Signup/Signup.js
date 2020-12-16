@@ -7,11 +7,19 @@ export default class Signup extends Component {
 
     }
 
+    handleSignup = (event) => {
+        event.preventDefault()
+
+        this.props.signup(event)
+
+        this.props.history.push('/')
+    }
+
     render() {
 
         return (
             <div className="Signup">
-                <form onSubmit={this.props.signup}>
+                <form onSubmit={this.handleSignup}>
                     Name:<input type='text' name='name'/><br/>
                     Username:<input type='text' name='username'/><br/>
                     Password:<input type='text' name='password'/><br/>
