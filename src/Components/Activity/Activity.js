@@ -15,15 +15,15 @@ export default class Activity extends Component {
 
         const locationList = activity.Locations.map(location => {
             return (
-                <li>
-                <Link to={`/locations/${location.id}`}>{location.name}</Link>
-                </li>
+                <Link className="linktag" to={`/locations/${location.id}`}>{location.name}</Link>
             )
         })
 
         return (
             <div className="Activity">
-                {activity.name}
+                <h3>
+                    Areas near you that offer {activity.name}!
+                </h3>
                 {locationList}
             </div>
         )

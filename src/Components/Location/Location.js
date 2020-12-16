@@ -15,14 +15,29 @@ export default class Location extends Component {
 
         const activityList = location.Activities.map(activity => {
             return (
-                <li>{activity.name}</li>
+                <p>{activity.name}</p>
+            )
+        })
+
+        const trailList = location.Trails.map(trail => {
+            return (
+                <div>
+                    <h4>{trail.name}</h4>
+                    <p>{trail.length}</p>
+                </div>
             )
         })
 
         return (
-            <div className="Activity">
-                {location.name}
+            <div className="Location">
+                <h2>
+                    {location.name}
+                </h2>
+                <p>{location.address}</p>
+                <h3>Activities Offered Here:</h3>
                 {activityList}
+                <h3>Trails:</h3>
+                {trailList}
             </div>
         )
     }
