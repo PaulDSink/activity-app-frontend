@@ -17,6 +17,7 @@ export default class Header extends Component {
                 </div>
                 <Nav
                 loggedIn={this.props.loggedIn}
+                user={this.props.user}
                 />
             </div>
         )

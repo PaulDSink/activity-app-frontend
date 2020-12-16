@@ -10,6 +10,7 @@ import Header from './Components/Header/Header'
 import Login from './Components/Login/Login'
 import Signup from './Components/Signup/Signup'
 import Logout from './Components/Logout/Logout'
+import Profile from './Components/Profile/Profile'
 
 const backendUrl = 'https://trails-app-api.herokuapp.com/api'
 
@@ -21,8 +22,7 @@ export default class App extends Component {
       activities: [],
       locations: [],
       loggedIn: false,
-      userId: 0,
-      admin: false,
+      user: {},
     }
   }
 
@@ -36,8 +36,7 @@ export default class App extends Component {
 
     this.setState({
       loggedIn: true,
-      userId: response.data.id,
-      admin: response.data.admin,
+      user: response.data.user,
     })
   }
 
@@ -59,8 +58,22 @@ export default class App extends Component {
 
     this.setState({
       loggedIn: false,
-      userId: 0,
-      admin: false,
+      user: {},
+    })
+  }
+
+  updateUser = async (event) => {
+    event.preventDefault()
+
+    let response = await axios.put(`${backendUrl}/users/profile/${event.target.userId.value}`, {
+      name: event.target.name.value,
+      username: event.target.username.value,
+    })
+
+    let user = response.data.user[1][0]
+
+    this.setState({
+      user: user
     })
   }
 
@@ -91,14 +104,14 @@ export default class App extends Component {
       <div className="App">
         <Header
         loggedIn={this.state.loggedIn}
-        userId={this.state.userId}
+        user={this.state.user}
         />
         <main>
           <Switch>
             <Route exact path='/'
               component={() => <ActivityList
               activities={this.state.activities}
-              admin={this.state.admin}
+              user={this.state.user}
               />}
             />
             <Route path='/signup'
@@ -132,6 +145,14 @@ export default class App extends Component {
               component={(routerProps) => <Location 
               {...routerProps}
               locations={this.state.locations}
+              />}
+            />
+            <Route
+              path='/profile/:id'
+              component={(routerProps) => <Profile
+              {...routerProps}
+              user={this.state.user}
+              updateUser={this.updateUser}
               />}
             />
           </Switch>

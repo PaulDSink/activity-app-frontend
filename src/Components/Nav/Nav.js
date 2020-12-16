@@ -12,7 +12,7 @@ export default class Nav extends Component {
             return (
                 <nav className="Navbar">
                     <Link className="linktag" to='/'>Return to Activities</Link>
-                    <Link className="linktag" to='/profile'>User Profile</Link>
+                    <Link className="linktag" to={'/profile/' + this.props.user.id}>User Profile</Link>
                     <Link className="linktag" to='/logout'>Logout</Link>
                 </nav>
             )
