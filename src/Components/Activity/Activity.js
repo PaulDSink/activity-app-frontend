@@ -7,6 +7,20 @@ export default class Activity extends Component {
 
     }
 
+    adminAddLocation = () => {
+        if (this.props.user.admin) {
+            return (
+                <form onSubmit={this.props.addLocation}>
+                    <input type='hidden' name='activityId' value={this.props.match.params.id}/>
+                    Name:<input type='text' name='name'/>
+                    Address:<input type='text' name='address'/>
+                    Description:<input type='text' name='description'/>
+                    <input type='submit' value='Add Location'/>
+                </form>
+            )
+        }
+    }
+
     render() {
 
         const activity = this.props.activities.find(activity => {
@@ -19,12 +33,15 @@ export default class Activity extends Component {
             )
         })
 
+        const addLocation = this.adminAddLocation()
+
         return (
             <div className="Activity">
                 <h3>
                     Areas near you that offer {activity.name}!
                 </h3>
                 {locationList}
+                {addLocation}
             </div>
         )
     }

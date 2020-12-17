@@ -7,6 +7,17 @@ export default class ActivityList extends Component {
 
     }
 
+    adminAddActivity = () => {
+        if (this.props.user.admin) {
+            return (
+                <form onSubmit={this.props.addActivity}>
+                    Name:<input type='text' name='name'/>
+                    <input type='submit' value='Add'/>
+                </form>
+            )
+        }
+    }
+
     render() {
 
         const activityList = this.props.activities.map((activity) => {
@@ -15,10 +26,13 @@ export default class ActivityList extends Component {
             )
         })
 
+        const addActivity = this.adminAddActivity()
+
         return (
             <div className="ActivityList">
                 <h3>What activity are you looking to do?</h3>
                 {activityList}
+                {addActivity}
             </div>
         )
     }

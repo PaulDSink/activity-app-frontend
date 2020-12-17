@@ -77,6 +77,14 @@ export default class App extends Component {
     })
   }
 
+  deleteUser = async (event) => {
+    event.preventDefault()
+
+    await axios.delete(`${backendUrl}/users/profile/${event.target.userId.value}`)
+
+    this.logout()
+  }
+
   getActivities = async () => {
     const response = await axios(`${backendUrl}/activities`)
 
@@ -85,6 +93,17 @@ export default class App extends Component {
     })
   }
 
+  addActivity = async (event) => {
+    event.preventDefault()
+
+    await axios.post(`${backendUrl}/activities`, {
+      name: event.target.name.value
+    })
+
+    this.getActivities()
+  }
+
+
   getLocations = async () => {
     const response = await axios(`${backendUrl}/locations`)
 
@@ -92,6 +111,35 @@ export default class App extends Component {
       locations: response.data.locations,
     })
   }
+
+
+  addLocation = async (event) => {
+    event.preventDefault()
+
+    const response = await axios.post(`${backendUrl}/locations`, {
+      name: event.target.name.value,
+      address: event.target.address.value,
+      description: event.target.description.value,
+    })
+
+    const data = {
+      locationId: response.data.newLocation.id,
+      activityId: event.target.activityId.value
+    }
+
+    this.locationBindActivity(data)
+  }
+
+
+  locationBindActivity = async (data) => {
+
+    await axios.post(`${backendUrl}/locations/${data.locationId}/addactivity`, {
+      id: data.activityId,
+    })
+
+    this.getActivities()
+  }
+
 
   componentDidMount = async () => {
     this.getActivities()
@@ -110,6 +158,7 @@ export default class App extends Component {
           <Switch>
             <Route exact path='/'
               component={() => <ActivityList
+              addActivity={this.addActivity}
               activities={this.state.activities}
               user={this.state.user}
               />}
@@ -138,7 +187,9 @@ export default class App extends Component {
             <Route path='/activities/:id'
               component={(routerProps) => <Activity 
               {...routerProps}
+              addLocation={this.addLocation}
               activities={this.state.activities}
+              user={this.state.user}
               />}
             />
             <Route path='/locations/:id'
@@ -153,6 +204,7 @@ export default class App extends Component {
               {...routerProps}
               user={this.state.user}
               updateUser={this.updateUser}
+              deleteUser={this.deleteUser}
               />}
             />
           </Switch>

@@ -7,6 +7,14 @@ export default class Profile extends Component {
 
     }
 
+    handleDelete = (event) => {
+        event.preventDefault()
+
+        this.props.deleteUser(event)
+
+        this.props.history.push('/')
+    }
+
 
     render() {
 
@@ -18,6 +26,10 @@ export default class Profile extends Component {
                     Name:<input type='text' name='name' placeholder={this.props.user.name}/><br/>
                     Username:<input type='text' name='username' placeholder={this.props.user.username}/><br/>
                     <input type='submit' value='Update Profile'/>
+                </form>
+                <form onSubmit={this.handleDelete}>
+                    <input type='hidden' name='userId' value={this.props.user.id}/>
+                    <input type='submit' value='DELETE Profile'/>
                 </form>
             </div>
         )
