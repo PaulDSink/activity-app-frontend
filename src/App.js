@@ -103,6 +103,14 @@ export default class App extends Component {
     this.getActivities()
   }
 
+  deleteActivity = async (event) => {
+    event.preventDefault()
+
+    await axios.delete(`${backendUrl}/activities/${event.target.activityId.value}`)
+
+    this.getActivities()
+  }
+
 
   getLocations = async () => {
     const response = await axios(`${backendUrl}/locations`)
@@ -141,6 +149,35 @@ export default class App extends Component {
   }
 
 
+  deleteLocation = async (event) => {
+    event.preventDefault()
+
+    await axios.delete(`${backendUrl}/locations/${event.target.locationId.value}`)
+
+    this.getActivities()
+  }
+  
+
+  addTrail = async (event) => {
+    event.preventDefault()
+
+    await axios.post(`${backendUrl}/locations/${event.target.locationId.value}/newtrail`, {
+      name: event.target.name.value,
+      length: event.target.length.value,
+    })
+
+    this.getLocations()
+  }
+
+  deleteTrail = async (event) => {
+    event.preventDefault()
+
+    await axios.delete(`${backendUrl}/trails/${event.target.trailId.value}`)
+
+    this.getLocations()
+  }
+
+
   componentDidMount = async () => {
     this.getActivities()
     this.getLocations()
@@ -159,6 +196,7 @@ export default class App extends Component {
             <Route exact path='/'
               component={() => <ActivityList
               addActivity={this.addActivity}
+              deleteActivity={this.deleteActivity}
               activities={this.state.activities}
               user={this.state.user}
               />}
@@ -188,6 +226,7 @@ export default class App extends Component {
               component={(routerProps) => <Activity 
               {...routerProps}
               addLocation={this.addLocation}
+              deleteLocation={this.deleteLocation}
               activities={this.state.activities}
               user={this.state.user}
               />}
@@ -195,7 +234,10 @@ export default class App extends Component {
             <Route path='/locations/:id'
               component={(routerProps) => <Location 
               {...routerProps}
+              addTrail={this.addTrail}
+              deleteTrail={this.deleteTrail}
               locations={this.state.locations}
+              user={this.state.user}
               />}
             />
             <Route

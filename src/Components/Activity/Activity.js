@@ -28,9 +28,23 @@ export default class Activity extends Component {
         })
 
         const locationList = activity.Locations.map(location => {
-            return (
-                <Link className="linktag" to={`/locations/${location.id}`}>{location.name}</Link>
-            )
+            if (this.props.user.admin) {
+                return (
+                    <div>
+                        <Link className="linktag" to={`/locations/${location.id}`}>{location.name}</Link>
+                        <form onSubmit={this.props.deleteLocation}>
+                            <input type='hidden' name='locationId' value={location.id}/>
+                            <input type='submit' value='Delete Location' />
+                        </form>
+                    </div>
+                )
+            } else {
+                return (
+                    <div>
+                        <Link className="linktag" to={`/locations/${location.id}`}>{location.name}</Link>
+                    </div>
+                )
+            }
         })
 
         const addLocation = this.adminAddLocation()

@@ -21,9 +21,23 @@ export default class ActivityList extends Component {
     render() {
 
         const activityList = this.props.activities.map((activity) => {
-            return (
-                <Link className="linktag" to={`/activities/${activity.id}`}>{activity.name}</Link>
-            )
+            if (this.props.user.admin) {
+                return (
+                    <div>
+                        <Link className="linktag" to={`/activities/${activity.id}`}>{activity.name}</Link>
+                        <form onSubmit={this.props.deleteActivity}>
+                            <input type='hidden' name='activityId' value={activity.id}/>
+                            <input type='submit' value='Delete Activity' />
+                        </form>
+                    </div>
+                )
+            } else {
+                return (
+                    <div>
+                        <Link className="linktag" to={`/activities/${activity.id}`}>{activity.name}</Link>
+                    </div>
+                )
+            }
         })
 
         const addActivity = this.adminAddActivity()

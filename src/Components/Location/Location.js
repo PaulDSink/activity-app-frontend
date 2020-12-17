@@ -7,6 +7,19 @@ export default class Location extends Component {
 
     }
 
+    adminAddTrail = () => {
+        if (this.props.user.admin) {
+            return (
+                <form onSubmit={this.props.addTrail}>
+                    <input type='hidden' name='locationId' value={this.props.match.params.id}/>
+                    Name:<input type='text' name='name'/>
+                    Length:<input type='text' name='length'/>
+                    <input type='submit' value='Add Trail'/>
+                </form>
+            )
+        }
+    }
+
     render() {
 
         const location = this.props.locations.find(location => {
@@ -20,13 +33,28 @@ export default class Location extends Component {
         })
 
         const trailList = location.Trails.map(trail => {
-            return (
-                <div>
-                    <h4>{trail.name}</h4>
-                    <p>{trail.length}</p>
-                </div>
-            )
+            if (this.props.user.admin) {
+                return (
+                    <div>
+                        <h4>{trail.name}</h4>
+                        <p>{trail.length}</p>
+                        <form onSubmit={this.props.deleteTrail}>
+                            <input type='hidden' name='trailId' value={trail.id}/>
+                            <input type='submit' value='Delete Trail' />
+                        </form>
+                    </div>
+                )
+            } else {
+                return (
+                    <div>
+                        <h4>{trail.name}</h4>
+                        <p>{trail.length}</p>
+                    </div>
+                )
+            }
         })
+
+        const addTrail = this.adminAddTrail()
 
         return (
             <div className="Location">
@@ -38,6 +66,7 @@ export default class Location extends Component {
                 {activityList}
                 <h3>Trails:</h3>
                 {trailList}
+                {addTrail}
             </div>
         )
     }
