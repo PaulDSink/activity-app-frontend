@@ -20,17 +20,58 @@ export default class Location extends Component {
         }
     }
 
+    locationActivity = (event) => {
+        event.preventDefault()
+
+        let data = {
+            locationId: parseInt(this.props.match.params.id),
+            activityId: parseInt(event.target.value)
+        }
+
+        console.log(data)
+
+        if (event.target.checked) {
+            this.props.locationBindActivity(data)
+            console.log('checked')
+        } else {
+            this.props.locationUnbindActivity(data)
+            console.log('unchecked')
+        }
+    }
+
     render() {
 
         const location = this.props.locations.find(location => {
             return location.id === parseInt(this.props.match.params.id)
         })
 
-        const activityList = location.Activities.map(activity => {
-            return (
-                <p>{activity.name}</p>
-            )
+        const locationActivities = location.Activities.map(({ id }) => id)
+
+
+        const activityList = this.props.activities.map(activity => {
+
+            if (this.props.user.admin) {
+                console.log(`${activity.name} can be done at this location`)
+                return (
+                    <div>
+                        <form>
+                            <input type='checkbox' id='activityCheckbox' name='activityId' value={activity.id} checked={locationActivities.includes(activity.id)} onChange={this.locationActivity}/>
+                            <label for='activityCheckbox'>{activity.name}</label>
+                        </form>
+                    </div>
+                )
+            } else {
+                if(locationActivities.includes(activity.id)) {
+                    console.log(`${activity.name} can be done at this location`)
+                    return (
+                        <div>
+                            <p>{activity.name}</p>
+                        </div>
+                    )
+                }
+            }
         })
+
 
         const trailList = location.Trails.map(trail => {
             if (this.props.user.admin) {

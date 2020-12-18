@@ -12,7 +12,7 @@ import Signup from './Components/Signup/Signup'
 import Logout from './Components/Logout/Logout'
 import Profile from './Components/Profile/Profile'
 
-const backendUrl = 'https://trails-app-api.herokuapp.com/api'
+const backendUrl = 'http://localhost:3000/api'
 
 export default class App extends Component {
   constructor() {
@@ -145,7 +145,23 @@ export default class App extends Component {
       id: data.activityId,
     })
 
+    this.getLocations()
     this.getActivities()
+    
+
+  }
+
+  locationUnbindActivity = async (data) => {
+    
+    await axios.delete(`${backendUrl}/locations/${data.locationId}/unbind`, {
+      data:{
+        id: data.activityId,
+      }
+    })
+
+    this.getLocations()
+    this.getActivities()
+    
   }
 
 
@@ -236,6 +252,9 @@ export default class App extends Component {
               {...routerProps}
               addTrail={this.addTrail}
               deleteTrail={this.deleteTrail}
+              locationBindActivity={this.locationBindActivity}
+              locationUnbindActivity={this.locationUnbindActivity}
+              activities={this.state.activities}
               locations={this.state.locations}
               user={this.state.user}
               />}
